@@ -39,10 +39,10 @@ class CNN:
         Args:
             verbose: Display progress bar if True else disable it. Default value is True.
         """
-        from tensorflow.keras.applications.mobilenet import MobileNet, preprocess_input
+        from tensorflow.keras.applications.resnet_v2 import ResNet152V2, preprocess_input
         from imagededup.utils.data_generator import DataGenerator
 
-        self.MobileNet = MobileNet
+        self.MobileNet = ResNet152V2
         self.preprocess_input = preprocess_input
         self.DataGenerator = DataGenerator
 
