@@ -58,7 +58,7 @@ def save_json(results: Dict, filename: str, float_scores: bool = False) -> None:
 
 
 def parallelise(function: Callable, data: List, verbose: bool) -> List:
-    pool = Pool(processes=cpu_count())
+    pool = Pool(processes=cpu_count()/2)
     results = list(
         tqdm.tqdm(pool.imap(function, data, 100), total=len(data), disable=not verbose)
     )

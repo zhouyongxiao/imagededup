@@ -32,9 +32,9 @@ class CNN:
 
     def __init__(self, verbose: bool = True) -> None:
         """
-        Initialize a keras MobileNet model that is sliced at the last convolutional layer.
+        Initialize a keras ResNet152 model that is sliced at the last convolutional layer.
         Set the batch size for keras generators to be 64 samples. Set the input image size to (224, 224) for providing
-        as input to MobileNet model.
+        as input to ResNet152 model.
 
         Args:
             verbose: Display progress bar if True else disable it. Default value is True.
@@ -57,14 +57,14 @@ class CNN:
 
     def _build_model(self):
         """
-        Build MobileNet model sliced at the last convolutional layer with global average pooling added.
+        Build ResNet152 model sliced at the last convolutional layer with global average pooling added.
         """
         self.model = self.MobileNet(
             input_shape=(224, 224, 3), include_top=False, pooling='avg'
         )
 
         self.logger.info(
-            'Initialized: MobileNet pretrained on ImageNet dataset sliced at last conv layer and added '
+            'Initialized: ResNet152 pretrained on ImageNet dataset sliced at last conv layer and added '
             'GlobalAveragePooling'
         )
 
@@ -99,8 +99,8 @@ class CNN:
             basenet_preprocess=self.preprocess_input,
         )
 
-        feat_vec = self.model.predict_generator(
-            self.data_generator, len(self.data_generator), verbose=self.verbose
+        feat_vec = self.model.predict(
+            self.data_generator, steps=len(self.data_generator), verbose=self.verbose
         )
         self.logger.info('End: Image encoding generation')
 
