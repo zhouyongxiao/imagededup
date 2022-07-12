@@ -208,7 +208,7 @@ class CNN:
         min_similarity_threshold: float,
         scores: bool,
         outfile: Optional[str] = None,
-    ) -> Dict:
+    ) -> None:
         """
         Take in dictionary {filename: encoded image}, detects duplicates above the given cosine similarity threshold
         and returns a dictionary containing key as filename and value as a list of duplicate filenames. Optionally,
@@ -242,25 +242,29 @@ class CNN:
         )  # allows to filter diagonal in results, 2 is a placeholder value
 
         self.logger.info('End: Calculating cosine similarities.')
-
         self.results = {}
         for i, j in enumerate(self.cosine_scores):
             duplicates_bool = (j >= min_similarity_threshold) & (j < 2)
-            self.logger.info("start finding similarity for item" + str(i))
+            if i % 10 == 0:
+                self.logger.info("start finding similarity for item " + str(i))
             if scores:
                 tmp = np.array([*zip(image_ids, j)], dtype=object)
                 duplicates = list(map(tuple, tmp[duplicates_bool]))
 
             else:
                 duplicates = list(image_ids[duplicates_bool])
-
-            self.results[image_ids[i]] = duplicates
-
+            if len(duplicates) > 0:
+                self.results[image_ids[i]] = duplicates
+            #if i % 100 == 0:
+            #    if outfile and scores:
+            #        save_json(results=self.results, filename=outfile, float_scores=True)
+            #    elif outfile:
+            #        save_json(results=self.results, filename=outfile)
         if outfile and scores:
             save_json(results=self.results, filename=outfile, float_scores=True)
         elif outfile:
             save_json(results=self.results, filename=outfile)
-        return self.results
+        return #self.results
 
     def _find_duplicates_dir(
         self,
@@ -268,7 +272,7 @@ class CNN:
         min_similarity_threshold: float,
         scores: bool,
         outfile: Optional[str] = None,
-    ) -> Dict:
+    ) -> None:
         """
         Take in path of the directory in which duplicates are to be detected above the given threshold.
         Returns dictionary containing key as filename and value as a list of duplicate file names.  Optionally,
@@ -289,7 +293,7 @@ class CNN:
         """
         self.encode_images(image_dir=image_dir)
 
-        return self._find_duplicates_dict(
+        self._find_duplicates_dict(
             encoding_map=self.encoding_map,
             min_similarity_threshold=min_similarity_threshold,
             scores=scores,
@@ -303,7 +307,7 @@ class CNN:
         min_similarity_threshold: float = 0.9,
         scores: bool = False,
         outfile: Optional[str] = None,
-    ) -> Dict:
+    ) -> None:
         """
         Find duplicates for each file. Take in path of the directory or encoding dictionary in which duplicates are to
         be detected above the given threshold. Return dictionary containing key as filename and value as a list of
@@ -344,14 +348,14 @@ class CNN:
         self._check_threshold_bounds(min_similarity_threshold)
 
         if image_dir:
-            result = self._find_duplicates_dir(
+            self._find_duplicates_dir(
                 image_dir=image_dir,
                 min_similarity_threshold=min_similarity_threshold,
                 scores=scores,
                 outfile=outfile,
             )
         elif encoding_map:
-            result = self._find_duplicates_dict(
+            self._find_duplicates_dict(
                 encoding_map=encoding_map,
                 min_similarity_threshold=min_similarity_threshold,
                 scores=scores,
@@ -361,7 +365,7 @@ class CNN:
         else:
             raise ValueError('Provide either an image directory or encodings!')
 
-        return result
+        return
 
     def find_duplicates_to_remove(
         self,
