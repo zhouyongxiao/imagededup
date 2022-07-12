@@ -18,7 +18,7 @@ def cosine_similarity_chunk(t: Tuple) -> np.ndarray:
 
 
 def get_cosine_similarity(
-    X: np.ndarray, verbose: bool = True, chunk_size: int = 1000, threshold: int = 10000
+    X: np.ndarray, verbose: bool = True, chunk_size: int = 100, threshold: int = 10000
 ) -> np.ndarray:
     n_rows = X.shape[0]
 
