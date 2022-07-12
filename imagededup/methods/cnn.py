@@ -245,7 +245,7 @@ class CNN:
         self.results = {}
         for i, j in enumerate(self.cosine_scores):
             duplicates_bool = (j >= min_similarity_threshold) & (j < 2)
-            if i % 10 == 0:
+            if i % 100 == 0:
                 self.logger.info("start finding similarity for item " + str(i))
             if scores:
                 tmp = np.array([*zip(image_ids, j)], dtype=object)
