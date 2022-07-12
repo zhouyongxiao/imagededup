@@ -260,7 +260,7 @@ class CNN:
                     save_json(results=self.results, filename=outfile+str(i)+".json", float_scores=True)
                 elif outfile:
                     save_json(results=self.results, filename=outfile+str(i)+".json")
-                self.results = {}
+                self.results.clear()
         if i % 5000 != 0:
             if outfile and scores:
                 save_json(results=self.results, filename=outfile, float_scores=True)
