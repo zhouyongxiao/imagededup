@@ -245,7 +245,7 @@ class CNN:
         self.results = {}
         for i, j in enumerate(self.cosine_scores):
             duplicates_bool = (j >= min_similarity_threshold) & (j < 2)
-            if i % 100 == 0:
+            if i % 500 == 0 and i != 0:
                 self.logger.info("start finding similarity for item " + str(i))
             if scores:
                 tmp = np.array([*zip(image_ids, j)], dtype=object)
@@ -253,8 +253,8 @@ class CNN:
 
             else:
                 duplicates = list(image_ids[duplicates_bool])
-            #if len(duplicates) > 0:
-            self.results[image_ids[i]] = duplicates
+            if len(duplicates) > 0:
+                self.results[image_ids[i]] = duplicates
             if i % 5000 == 0:
                 if outfile and scores:
                     save_json(results=self.results, filename=outfile+str(i)+".json", float_scores=True)
