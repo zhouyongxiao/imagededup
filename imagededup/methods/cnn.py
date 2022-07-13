@@ -230,7 +230,7 @@ class CNN:
 
         # get all image ids
         # we rely on dictionaries preserving insertion order in Python >=3.6
-        if encoding_map_2:
+        if encoding_map_2 is not None:
             image_ids_1 = np.array([*encoding_map_1.keys()])
             features_1 = np.array([*encoding_map_1.values()])
             image_ids_2 = np.array([*encoding_map_2.keys()])

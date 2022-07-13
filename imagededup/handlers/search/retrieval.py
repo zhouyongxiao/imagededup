@@ -21,7 +21,7 @@ def get_cosine_similarity(
     X: np.ndarray, Y: np.ndarray, verbose: bool = True, chunk_size: int = 100, threshold: int = 10000
 ) -> np.ndarray:
     n_rows = X.shape[0]
-    if Y:
+    if Y is not None:
         n_rows_y = Y.shape[0]
         similarity = np.empty([n_rows, n_rows_y])
         for i in range(n_rows_y):
