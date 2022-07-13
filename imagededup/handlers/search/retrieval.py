@@ -22,11 +22,11 @@ def get_cosine_similarity(
 ) -> np.ndarray:
     n_rows = X.shape[0]
     if Y is not None:
-        n_rows_y = Y.shape[0]
-        similarity = np.empty([n_rows, n_rows_y])
-        for i in range(n_rows_y):
-            similarity[:, :i] = cosine_similarity(X, np.reshape(Y[i], (1, -1)))
-        return similarity
+        #n_rows_y = Y.shape[0]
+        #similarity = np.empty([n_rows, n_rows_y])
+
+        #similarity =
+        return cosine_similarity(X, Y)
     else:
         if n_rows <= threshold:
             return cosine_similarity(X)
