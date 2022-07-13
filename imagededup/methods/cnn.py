@@ -248,7 +248,7 @@ class CNN:
         for i in range(len(self.cosine_scores)):
             if i % 500 == 0 and i != 0:
                 self.logger.info("start finding similarity for item " + str(i))
-                duplicates = {}
+            duplicates = {}
             for j in range(len(self.cosine_scores[0])):
                 duplicates_bool = (self.cosine_scores[i][j] >= min_similarity_threshold) & (self.cosine_scores[i][j] < 2)
                 if duplicates_bool:
