@@ -309,11 +309,11 @@ class CNN:
                 #    self.results.clear()
                     #gc.collect()
             #if i % 5000 != 0:
-            if outfile and scores:
-                save_json(results=self.results, filename=outfile, float_scores=True)
-            elif outfile:
-                save_json(results=self.results, filename=outfile)
-            return self.results
+        if outfile and scores:
+            save_json(results=self.results, filename=outfile, float_scores=True)
+        elif outfile:
+            save_json(results=self.results, filename=outfile)
+        return self.results
 
     def _find_duplicates_dir(
         self,
