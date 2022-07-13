@@ -2,7 +2,7 @@ from pathlib import Path, PurePath
 from typing import Dict, List, Optional, Union
 
 import numpy as np
-
+import json
 from imagededup.handlers.search.retrieval import get_cosine_similarity
 from imagededup.utils.general_utils import save_json, get_files_to_remove
 from imagededup.utils.image_utils import (
@@ -244,18 +244,19 @@ class CNN:
 
         self.logger.info('End: Calculating cosine similarities.')
         self.results = {}
-        for i, j in enumerate(self.cosine_scores):
-            duplicates_bool = (j >= min_similarity_threshold) & (j < 2)
-            if i % 500 == 0 and i != 0:
-                self.logger.info("start finding similarity for item " + str(i))
-            if scores:
-                tmp = np.array([*zip(image_ids, j)], dtype=object)
-                duplicates = list(map(tuple, tmp[duplicates_bool]))
-
-            else:
-                duplicates = list(image_ids[duplicates_bool])
-            if len(duplicates) > 0:
-                self.results[image_ids[i]] = duplicates
+        with open(outfile, 'w') as f:
+            json.dump(self.cosine_scores, f, indent=2, sort_keys=True)
+        #for i, j in enumerate(self.cosine_scores):
+        #    duplicates_bool = (j >= min_similarity_threshold) & (j < 2)
+        #    if i % 500 == 0 and i != 0:
+        #        self.logger.info("start finding similarity for item " + str(i))
+        #    if scores:
+        #        tmp = np.array([*zip(image_ids, j)], dtype=object)
+        #        duplicates = list(map(tuple, tmp[duplicates_bool]))
+        #    else:
+        #        duplicates = list(image_ids[duplicates_bool])
+        #    if len(duplicates) > 0:
+        #        self.results[image_ids[i]] = duplicates
             #if i % 5000 == 0 and i != 0:
             #    if outfile and scores:
             #        save_json(results=self.results, filename=outfile+str(i)+".json", float_scores=True)
@@ -264,11 +265,11 @@ class CNN:
             #    self.results.clear()
                 #gc.collect()
         #if i % 5000 != 0:
-        if outfile and scores:
-            save_json(results=self.results, filename=outfile, float_scores=True)
-        elif outfile:
-            save_json(results=self.results, filename=outfile)
-        return #self.results
+        #if outfile and scores:
+        #    save_json(results=self.results, filename=outfile, float_scores=True)
+        #elif outfile:
+        #    save_json(results=self.results, filename=outfile)
+        #return #self.results
 
     def _find_duplicates_dir(
         self,
