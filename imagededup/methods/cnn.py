@@ -247,7 +247,7 @@ class CNN:
                 for j in range(len(self.cosine_scores)):
                     duplicates_bool = (self.cosine_scores[j][i] >= min_similarity_threshold) & (self.cosine_scores[j][i] < 2)
                     if scores:
-                        duplicates.append(tuple(image_ids_1[j], self.cosine_scores[j][i]))
+                        duplicates.append((image_ids_1[j], self.cosine_scores[j][i]))
                     else:
                         duplicates.append(image_ids_1[j])
                     if len(duplicates) > 0:
