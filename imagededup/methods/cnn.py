@@ -275,7 +275,7 @@ class CNN:
             #del duplicates_bool
             #del tmp
             #del duplicates
-            gc.collect()
+            #gc.collect()
             #if i % 5000 == 0 and i != 0:
             #    if outfile and scores:
             #        save_json(results=self.results, filename=outfile+str(i)+".json", float_scores=True)
