@@ -11,6 +11,7 @@ from imagededup.utils.image_utils import (
     expand_image_array_cnn,
 )
 from imagededup.utils.logger import return_logger
+import gc
 
 
 class CNN:
@@ -261,6 +262,7 @@ class CNN:
                 elif outfile:
                     save_json(results=self.results, filename=outfile+str(i)+".json")
                 self.results.clear()
+                gc.collect()
         if i % 5000 != 0:
             if outfile and scores:
                 save_json(results=self.results, filename=outfile, float_scores=True)
