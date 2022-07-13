@@ -332,7 +332,7 @@ class CNN:
         min_similarity_threshold: float = 0.9,
         scores: bool = False,
         outfile: Optional[str] = None,
-    ) -> np.ndarray:
+    ) -> Tuple[np.ndarray, np.array]:
         """
         Find duplicates for each file. Take in path of the directory or encoding dictionary in which duplicates are to
         be detected above the given threshold. Return dictionary containing key as filename and value as a list of
@@ -380,7 +380,7 @@ class CNN:
                 outfile=outfile,
             )
         elif encoding_map:
-            cosine_score = self._find_duplicates_dict(
+            cosine_score, image_ids = self._find_duplicates_dict(
                 encoding_map=encoding_map,
                 min_similarity_threshold=min_similarity_threshold,
                 scores=scores,
@@ -390,7 +390,7 @@ class CNN:
         else:
             raise ValueError('Provide either an image directory or encodings!')
 
-        return cosine_score
+        return cosine_score, image_ids
 
     def find_duplicates_to_remove(
         self,
