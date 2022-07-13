@@ -244,8 +244,6 @@ class CNN:
 
         self.logger.info('End: Calculating cosine similarities.')
         self.results = {}
-        del encoding_map
-        gc.collect()
         #for i in range(len(self.cosine_scores)):
         #    if i % 500 == 0 and i != 0:
         #        self.logger.info("start finding similarity for item " + str(i))
@@ -274,9 +272,9 @@ class CNN:
                 duplicates = list(image_ids[duplicates_bool])
             if len(duplicates) > 0:
                 self.results[image_ids[i]] = duplicates
-            del duplicates_bool
-            del tmp
-            del duplicates
+            #del duplicates_bool
+            #del tmp
+            #del duplicates
             gc.collect()
             #if i % 5000 == 0 and i != 0:
             #    if outfile and scores:
