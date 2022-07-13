@@ -25,7 +25,7 @@ def get_cosine_similarity(
         n_rows_y = Y.shape[0]
         similarity = np.empty([n_rows, n_rows_y])
         for i in range(n_rows_y):
-            similarity[:, i] = cosine_similarity(X, Y[i])
+            similarity[:, i] = cosine_similarity(X, np.reshape(Y[i, :], (1, -1)))
         return similarity
     else:
         if n_rows <= threshold:
