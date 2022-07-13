@@ -246,10 +246,11 @@ class CNN:
                     self.logger.info("start finding similarity for item " + str(i))
                 for j in range(len(self.cosine_scores)):
                     duplicates_bool = (self.cosine_scores[j][i] >= min_similarity_threshold) & (self.cosine_scores[j][i] < 2)
-                    if scores:
-                        duplicates.append((image_ids_1[j], self.cosine_scores[j][i]))
-                    else:
-                        duplicates.append(image_ids_1[j])
+                    if duplicates_bool:
+                        if scores:
+                            duplicates.append((image_ids_1[j], self.cosine_scores[j][i]))
+                        else:
+                            duplicates.append(image_ids_1[j])
                     if len(duplicates) > 0:
                         self.results[image_ids_2[j]] = duplicates
         else:
