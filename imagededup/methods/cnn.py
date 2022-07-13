@@ -1,5 +1,5 @@
 from pathlib import Path, PurePath
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 import numpy as np
 import json
@@ -209,7 +209,7 @@ class CNN:
         min_similarity_threshold: float,
         scores: bool,
         outfile: Optional[str] = None,
-    ) -> None:
+    ) -> Tuple[np.ndarray, np.array]:
         """
         Take in dictionary {filename: encoded image}, detects duplicates above the given cosine similarity threshold
         and returns a dictionary containing key as filename and value as a list of duplicate filenames. Optionally,
@@ -260,19 +260,19 @@ class CNN:
         #        self.results[image_ids[i]] = duplicates
         #    del duplicates
         #    gc.collect()
-        #return self.cosine_scores
-        for i, j in enumerate(self.cosine_scores):
-            duplicates_bool = (j >= min_similarity_threshold) & (j < 2)
-            if i % 500 == 0 and i != 0:
-                self.logger.info("start finding similarity for item " + str(i))
+        return self.cosine_scores, image_ids
+        #for i, j in enumerate(self.cosine_scores):
+        #    duplicates_bool = (j >= min_similarity_threshold) & (j < 2)
+        #    if i % 500 == 0 and i != 0:
+        #        self.logger.info("start finding similarity for item " + str(i))
                 #gc.collect()
-            if scores:
-                tmp = np.array([*zip(image_ids, j)], dtype=object)
-                duplicates = list(map(tuple, tmp[duplicates_bool]))
-            else:
-                duplicates = list(image_ids[duplicates_bool])
-            if len(duplicates) > 0:
-                self.results[image_ids[i]] = duplicates
+        #    if scores:
+        #        tmp = np.array([*zip(image_ids, j)], dtype=object)
+        #        duplicates = list(map(tuple, tmp[duplicates_bool]))
+        #    else:
+        #        duplicates = list(image_ids[duplicates_bool])
+        #    if len(duplicates) > 0:
+        #        self.results[image_ids[i]] = duplicates
             #del duplicates_bool
             #del tmp
             #del duplicates
@@ -285,10 +285,10 @@ class CNN:
             #    self.results.clear()
                 #gc.collect()
         #if i % 5000 != 0:
-        if outfile and scores:
-            save_json(results=self.results, filename=outfile, float_scores=True)
-        elif outfile:
-            save_json(results=self.results, filename=outfile)
+        #if outfile and scores:
+        #    save_json(results=self.results, filename=outfile, float_scores=True)
+        #elif outfile:
+        #    save_json(results=self.results, filename=outfile)
         #return #self.results
 
     def _find_duplicates_dir(
