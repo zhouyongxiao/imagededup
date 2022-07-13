@@ -256,7 +256,7 @@ class CNN:
                 duplicates = list(image_ids[duplicates_bool])
             if len(duplicates) > 0:
                 self.results[image_ids[i]] = duplicates
-            if i % 5000 == 0:
+            if i % 5000 == 0 and i != 0:
                 if outfile and scores:
                     save_json(results=self.results, filename=outfile+str(i)+".json", float_scores=True)
                 elif outfile:
