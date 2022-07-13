@@ -18,26 +18,32 @@ def cosine_similarity_chunk(t: Tuple) -> np.ndarray:
 
 
 def get_cosine_similarity(
-    X: np.ndarray, verbose: bool = True, chunk_size: int = 100, threshold: int = 10000
+    X: np.ndarray, Y: np.ndarray, verbose: bool = True, chunk_size: int = 100, threshold: int = 10000
 ) -> np.ndarray:
     n_rows = X.shape[0]
-
-    if n_rows <= threshold:
-        return cosine_similarity(X)
-
+    if Y:
+        n_rows_y = Y.shape[0]
+        similarity = np.empty([n_rows, n_rows_y])
+        for i in range(n_rows_y):
+            similarity[:, i] = cosine_similarity(X, Y[i])
+        return similarity
     else:
-        logger.info(
-            'Large feature matrix thus calculating cosine similarities in chunks...'
-        )
-        start_idxs = list(range(0, n_rows, chunk_size))
-        end_idxs = start_idxs[1:] + [n_rows]
-        cos_sim = parallelise(
-            cosine_similarity_chunk,
-            [(X, idxs) for i, idxs in enumerate(zip(start_idxs, end_idxs))],
-            verbose,
-        )
+        if n_rows <= threshold:
+            return cosine_similarity(X)
 
-        return np.vstack(cos_sim)
+        else:
+            logger.info(
+                'Large feature matrix thus calculating cosine similarities in chunks...'
+            )
+            start_idxs = list(range(0, n_rows, chunk_size))
+            end_idxs = start_idxs[1:] + [n_rows]
+            cos_sim = parallelise(
+                cosine_similarity_chunk,
+                [(X, idxs) for i, idxs in enumerate(zip(start_idxs, end_idxs))],
+                verbose,
+            )
+
+            return np.vstack(cos_sim)
 
 
 class HashEval:

@@ -205,11 +205,12 @@ class CNN:
 
     def _find_duplicates_dict(
         self,
-        encoding_map: Dict[str, list],
+        encoding_map_1: Dict[str, list],
+        encoding_map_2: Dict[str, list],
         min_similarity_threshold: float,
         scores: bool,
         outfile: Optional[str] = None,
-    ) -> Tuple[np.ndarray, np.array]:
+    ) -> dict:
         """
         Take in dictionary {filename: encoded image}, detects duplicates above the given cosine similarity threshold
         and returns a dictionary containing key as filename and value as a list of duplicate filenames. Optionally,
@@ -229,67 +230,90 @@ class CNN:
 
         # get all image ids
         # we rely on dictionaries preserving insertion order in Python >=3.6
-        image_ids = np.array([*encoding_map.keys()])
+        if encoding_map_2:
+            image_ids_1 = np.array([*encoding_map_1.keys()])
+            features_1 = np.array([*encoding_map_1.values()])
+            image_ids_2 = np.array([*encoding_map_2.keys()])
+            features_2 = np.array([*encoding_map_2.values()])
 
-        # put image encodings into feature matrix
-        features = np.array([*encoding_map.values()])
+            self.logger.info('Start: Calculating cosine similarities...')
+            self.cosine_scores = get_cosine_similarity(features_1, features_2, self.verbose)
+            self.logger.info('End: Calculating cosine similarities.')
+            self.results = {}
+            for i in range(len(self.cosine_scores[0])):
+                duplicates = []
+                if i % 500 == 0 and i != 0:
+                    self.logger.info("start finding similarity for item " + str(i))
+                for j in range(len(self.cosine_scores)):
+                    duplicates_bool = (self.cosine_scores[j][i] >= min_similarity_threshold) & (self.cosine_scores[j][i] < 2)
+                    if scores:
+                        duplicates.append(zip(image_ids_1[j], self.cosine_scores[j][i]))
+                    else:
+                        duplicates.append(image_ids_1[j])
+                    if len(duplicates) > 0:
+                        self.results[image_ids_2[j]] = duplicates
+        else:
+            image_ids = np.array([*encoding_map_1.keys()])
 
-        self.logger.info('Start: Calculating cosine similarities...')
+            # put image encodings into feature matrix
+            features = np.array([*encoding_map_1.values()])
 
-        self.cosine_scores = get_cosine_similarity(features, self.verbose)
+            self.logger.info('Start: Calculating cosine similarities...')
 
-        np.fill_diagonal(
-            self.cosine_scores, 2.0
-        )  # allows to filter diagonal in results, 2 is a placeholder value
+            self.cosine_scores = get_cosine_similarity(features, self.verbose)
 
-        self.logger.info('End: Calculating cosine similarities.')
-        self.results = {}
-        #for i in range(len(self.cosine_scores)):
-        #    if i % 500 == 0 and i != 0:
-        #        self.logger.info("start finding similarity for item " + str(i))
-        #    duplicates = []
-        #    for j in range(len(self.cosine_scores[0])):
-        #        duplicates_bool = (self.cosine_scores[i][j] >= min_similarity_threshold) & (self.cosine_scores[i][j] < 2)
-        #        if duplicates_bool:
-        #            if scores:
-        #                #tmp = np.array(list(zip(image_ids[j], self.cosine_scores[i][j])))
-        #                duplicates.append(tuple(image_ids[j], self.cosine_scores[i][j]))
-        #            else:
-        #                duplicates.append = self.cosine_scores[i][j]
-        #    if len(duplicates) > 0:
-        #        self.results[image_ids[i]] = duplicates
-        #    del duplicates
-        #    gc.collect()
-        return self.cosine_scores, image_ids
-        #for i, j in enumerate(self.cosine_scores):
-        #    duplicates_bool = (j >= min_similarity_threshold) & (j < 2)
-        #    if i % 500 == 0 and i != 0:
-        #        self.logger.info("start finding similarity for item " + str(i))
-                #gc.collect()
-        #    if scores:
-        #        tmp = np.array([*zip(image_ids, j)], dtype=object)
-        #        duplicates = list(map(tuple, tmp[duplicates_bool]))
-        #    else:
-        #        duplicates = list(image_ids[duplicates_bool])
-        #    if len(duplicates) > 0:
-        #        self.results[image_ids[i]] = duplicates
-            #del duplicates_bool
-            #del tmp
-            #del duplicates
+            np.fill_diagonal(
+                self.cosine_scores, 2.0
+            )  # allows to filter diagonal in results, 2 is a placeholder value
 
-            #if i % 5000 == 0 and i != 0:
-            #    if outfile and scores:
-            #        save_json(results=self.results, filename=outfile+str(i)+".json", float_scores=True)
-            #    elif outfile:
-            #        save_json(results=self.results, filename=outfile+str(i)+".json")
-            #    self.results.clear()
-                #gc.collect()
-        #if i % 5000 != 0:
-        #if outfile and scores:
-        #    save_json(results=self.results, filename=outfile, float_scores=True)
-        #elif outfile:
-        #    save_json(results=self.results, filename=outfile)
-        #return #self.results
+            self.logger.info('End: Calculating cosine similarities.')
+            self.results = {}
+            #for i in range(len(self.cosine_scores)):
+            #    if i % 500 == 0 and i != 0:
+            #        self.logger.info("start finding similarity for item " + str(i))
+            #    duplicates = []
+            #    for j in range(len(self.cosine_scores[0])):
+            #        duplicates_bool = (self.cosine_scores[i][j] >= min_similarity_threshold) & (self.cosine_scores[i][j] < 2)
+            #        if duplicates_bool:
+            #            if scores:
+            #                #tmp = np.array(list(zip(image_ids[j], self.cosine_scores[i][j])))
+            #                duplicates.append(tuple(image_ids[j], self.cosine_scores[i][j]))
+            #            else:
+            #                duplicates.append = self.cosine_scores[i][j]
+            #    if len(duplicates) > 0:
+            #        self.results[image_ids[i]] = duplicates
+            #    del duplicates
+            #    gc.collect()
+            #return self.cosine_scores, image_ids
+            for i, j in enumerate(self.cosine_scores):
+                duplicates_bool = (j >= min_similarity_threshold) & (j < 2)
+                if i % 500 == 0 and i != 0:
+                    self.logger.info("start finding similarity for item " + str(i))
+                    #gc.collect()
+                if scores:
+                    tmp = np.array([*zip(image_ids, j)], dtype=object)
+                    duplicates = list(map(tuple, tmp[duplicates_bool]))
+                else:
+                    duplicates = list(image_ids[duplicates_bool])
+                if len(duplicates) > 0:
+                    self.results[image_ids[i]] = duplicates
+                #del duplicates_bool
+                #del tmp
+                #del duplicates
+
+                #if i % 5000 == 0 and i != 0:
+                #    if outfile and scores:
+                #        save_json(results=self.results, filename=outfile+str(i)+".json", float_scores=True)
+                #    elif outfile:
+                #        save_json(results=self.results, filename=outfile+str(i)+".json")
+                #    self.results.clear()
+                    #gc.collect()
+            #if i % 5000 != 0:
+            if outfile and scores:
+                save_json(results=self.results, filename=outfile, float_scores=True)
+            elif outfile:
+                save_json(results=self.results, filename=outfile)
+            return self.results
 
     def _find_duplicates_dir(
         self,
@@ -297,7 +321,7 @@ class CNN:
         min_similarity_threshold: float,
         scores: bool,
         outfile: Optional[str] = None,
-    ) -> None:
+    ) -> dict:
         """
         Take in path of the directory in which duplicates are to be detected above the given threshold.
         Returns dictionary containing key as filename and value as a list of duplicate file names.  Optionally,
@@ -318,7 +342,7 @@ class CNN:
         """
         self.encode_images(image_dir=image_dir)
 
-        self._find_duplicates_dict(
+        return self._find_duplicates_dict(
             encoding_map=self.encoding_map,
             min_similarity_threshold=min_similarity_threshold,
             scores=scores,
@@ -328,11 +352,12 @@ class CNN:
     def find_duplicates(
         self,
         image_dir: Union[PurePath, str] = None,
-        encoding_map: Dict[str, list] = None,
+        encoding_map_1: Dict[str, list] = None,
+        encoding_map_2: Dict[str, list] = None,
         min_similarity_threshold: float = 0.9,
         scores: bool = False,
         outfile: Optional[str] = None,
-    ) -> Tuple[np.ndarray, np.array]:
+    ) -> dict:
         """
         Find duplicates for each file. Take in path of the directory or encoding dictionary in which duplicates are to
         be detected above the given threshold. Return dictionary containing key as filename and value as a list of
@@ -373,15 +398,16 @@ class CNN:
         self._check_threshold_bounds(min_similarity_threshold)
 
         if image_dir:
-            self._find_duplicates_dir(
+            return self._find_duplicates_dir(
                 image_dir=image_dir,
                 min_similarity_threshold=min_similarity_threshold,
                 scores=scores,
                 outfile=outfile,
             )
-        elif encoding_map:
-            cosine_score, image_ids = self._find_duplicates_dict(
-                encoding_map=encoding_map,
+        elif encoding_map_1:
+            return self._find_duplicates_dict(
+                encoding_map_1=encoding_map_1,
+                encoding_map_2=encoding_map_2,
                 min_similarity_threshold=min_similarity_threshold,
                 scores=scores,
                 outfile=outfile,
@@ -390,7 +416,7 @@ class CNN:
         else:
             raise ValueError('Provide either an image directory or encodings!')
 
-        return cosine_score, image_ids
+        #return cosine_score, image_ids
 
     def find_duplicates_to_remove(
         self,
