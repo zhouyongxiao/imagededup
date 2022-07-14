@@ -251,8 +251,8 @@ class CNN:
                             duplicates.append((image_ids_1[j], self.cosine_scores[j][i]))
                         else:
                             duplicates.append(image_ids_1[j])
-                    if len(duplicates) > 0:
-                        self.results[image_ids_2[j]] = duplicates
+                if len(duplicates) > 0:
+                    self.results[image_ids_2[j]] = duplicates
         else:
             image_ids = np.array([*encoding_map_1.keys()])
 
