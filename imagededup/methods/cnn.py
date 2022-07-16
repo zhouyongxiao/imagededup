@@ -344,7 +344,8 @@ class CNN:
         self.encode_images(image_dir=image_dir)
 
         return self._find_duplicates_dict(
-            encoding_map=self.encoding_map,
+            encoding_map_1=self.encoding_map,
+            encoding_map_2=None,
             min_similarity_threshold=min_similarity_threshold,
             scores=scores,
             outfile=outfile,
