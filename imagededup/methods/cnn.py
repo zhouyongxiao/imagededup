@@ -206,7 +206,7 @@ class CNN:
     def _find_duplicates_dict(
         self,
         encoding_map_1: Dict[str, list],
-        encoding_map_2: Dict[str, list],
+        encoding_map_2: None,
         min_similarity_threshold: float,
         scores: bool,
         outfile: Optional[str] = None,
