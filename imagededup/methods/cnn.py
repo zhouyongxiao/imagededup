@@ -261,7 +261,7 @@ class CNN:
 
             self.logger.info('Start: Calculating cosine similarities...')
 
-            self.cosine_scores = get_cosine_similarity(features, self.verbose)
+            self.cosine_scores = get_cosine_similarity(X=features, Y=None, verbose=self.verbose)
 
             np.fill_diagonal(
                 self.cosine_scores, 2.0
