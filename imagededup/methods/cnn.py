@@ -98,6 +98,7 @@ class CNN:
             batch_size=self.batch_size,
             target_size=self.target_size,
             basenet_preprocess=self.preprocess_input,
+            filter_file="image_to_keep.json"
         )
 
         feat_vec = self.model.predict(

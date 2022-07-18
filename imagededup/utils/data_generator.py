@@ -1,6 +1,7 @@
 from pathlib import PurePath
 from typing import Tuple, List, Callable
-
+import os
+import json
 import numpy as np
 from tensorflow.keras.utils import Sequence
 
@@ -23,6 +24,7 @@ class DataGenerator(Sequence):
         batch_size: int,
         basenet_preprocess: Callable,
         target_size: Tuple[int, int],
+        filter_file: str,
     ) -> None:
         """Init DataGenerator object.
         """
@@ -30,18 +32,28 @@ class DataGenerator(Sequence):
         self.batch_size = batch_size
         self.basenet_preprocess = basenet_preprocess
         self.target_size = target_size
-
+        self.filter_file = filter_file
         self._get_image_files()
         self.indexes = np.arange(len(self.image_files))
         self.valid_image_files = self.image_files
 
     def _get_image_files(self) -> None:
-        self.image_files = sorted(
-            [
-                i.absolute()
-                for i in self.image_dir.glob('*')
-                if not i.name.startswith('.')]
-        )  # ignore hidden files
+        if not os.path.exists(self.image_dir + self.filter_file):
+            self.image_files = sorted(
+                [
+                    i.absolute()
+                    for i in self.image_dir.glob('*')
+                    if not i.name.startswith('.')]
+            )  # ignore hidden files
+        else:
+            with open(self.image_dir + "/" + self.filter_file, "r") as f:
+                image_to_keep = json.loads(f.read());
+            self.image_files = sorted(
+                [
+                    self.image_dir + "/" + i
+                    for i in image_to_keep]
+            )  # ignore hidden files
+
 
     def __len__(self) -> int:
         """Number of batches in the Sequence."""
