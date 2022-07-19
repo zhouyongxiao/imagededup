@@ -38,7 +38,7 @@ class DataGenerator(Sequence):
         self.valid_image_files = self.image_files
 
     def _get_image_files(self) -> None:
-        if not os.path.exists(self.image_dir + self.filter_file):
+        if not os.path.exists(self.image_dir / self.filter_file):
             self.image_files = sorted(
                 [
                     i.absolute()
@@ -46,7 +46,7 @@ class DataGenerator(Sequence):
                     if not i.name.startswith('.')]
             )  # ignore hidden files
         else:
-            with open(self.image_dir + "/" + self.filter_file, "r") as f:
+            with open(self.image_dir / self.filter_file, "r") as f:
                 image_to_keep = json.loads(f.read());
             self.image_files = sorted(
                 [
