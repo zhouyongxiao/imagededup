@@ -52,7 +52,8 @@ class DataGenerator(Sequence):
                 self.image_files.append(
                         image_dir / i
                         for i in image_to_keep
-                )  # ignore hidden files
+                ) # ignore hidden files
+        print(len(self.image_files))
 
 
     def __len__(self) -> int:
