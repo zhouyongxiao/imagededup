@@ -38,8 +38,8 @@ class DataGenerator(Sequence):
         self.valid_image_files = self.image_files
 
     def _get_image_files(self) -> None:
+        self.image_files = list()
         for image_dir in self.image_dirs:
-            self.image_files = list()
             if not os.path.exists(image_dir / self.filter_file):
                 self.image_files.append(
                         i.absolute()
