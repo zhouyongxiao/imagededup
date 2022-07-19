@@ -106,9 +106,17 @@ class CNN:
         )
         self.logger.info('End: Image encoding generation')
 
-        filenames = [str(i) for i in self.data_generator.valid_image_files]
-
-        self.encoding_map = {j: feat_vec[i, :] for i, j in enumerate(filenames)}
+        filenames = [i for i in self.data_generator.valid_image_files]
+        self.encoding_map = dict()
+        for i, j in enumerate(filenames):
+            folder = str(j.parent)
+            if folder in self.encoding_map:
+                cur_list = self.encoding_map[folder]
+            else:
+                cur_list = list()
+                self.encoding_map[folder] = cur_list
+            cur_list.append(tuple([str(j.name), feat_vec[i, :]]))
+        # self.encoding_map = {j: feat_vec[i, :] for i, j in enumerate(filenames)}
         return self.encoding_map
 
     def encode_image(
