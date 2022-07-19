@@ -106,7 +106,7 @@ class CNN:
         )
         self.logger.info('End: Image encoding generation')
 
-        filenames = [i.name for i in self.data_generator.valid_image_files]
+        filenames = [str(i) for i in self.data_generator.valid_image_files]
 
         self.encoding_map = {j: feat_vec[i, :] for i, j in enumerate(filenames)}
         return self.encoding_map
