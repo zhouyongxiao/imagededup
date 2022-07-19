@@ -47,14 +47,13 @@ class DataGenerator(Sequence):
                         if not i.name.startswith('.')
                 )  # ignore hidden files
             else:
-                with open(image_dir / self.filter_file, "r") as f:
+                with open(str(image_dir / self.filter_file), "r") as f:
                     image_to_keep = json.loads(f.read());
                 self.image_files.append(
                         image_dir / i
                         for i in image_to_keep
                 ) # ignore hidden files
         print(len(self.image_files))
-
 
     def __len__(self) -> int:
         """Number of batches in the Sequence."""
