@@ -47,8 +47,8 @@ class DataGenerator(Sequence):
                         if not i.name.startswith('.')
                 )  # ignore hidden files
             else:
-                with open(str(image_dir / self.filter_file), "r") as f:
-                    image_to_keep = json.loads(f.read());
+                with open(str(image_dir / self.filter_file), "r") as file:
+                    image_to_keep = json.loads(file.read());
                 self.image_files.append(
                         image_dir / i
                         for i in image_to_keep
