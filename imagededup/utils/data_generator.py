@@ -12,7 +12,7 @@ class DataGenerator(Sequence):
     """Class inherits from Keras Sequence base object, allows to use multiprocessing in .fit_generator.
 
     Attributes:
-        image_dir: Path of image directory.
+        image_dirs: Path of image directory.
         batch_size: Number of images per batch.
         basenet_preprocess: Basenet specific preprocessing function.
         target_size: Dimensions that images get resized into when loaded.
@@ -20,7 +20,7 @@ class DataGenerator(Sequence):
 
     def __init__(
         self,
-        image_dir: PurePath,
+        image_dirs: List[PurePath],
         batch_size: int,
         basenet_preprocess: Callable,
         target_size: Tuple[int, int],
@@ -28,7 +28,7 @@ class DataGenerator(Sequence):
     ) -> None:
         """Init DataGenerator object.
         """
-        self.image_dir = image_dir
+        self.image_dirs = image_dirs
         self.batch_size = batch_size
         self.basenet_preprocess = basenet_preprocess
         self.target_size = target_size
@@ -38,22 +38,21 @@ class DataGenerator(Sequence):
         self.valid_image_files = self.image_files
 
     def _get_image_files(self) -> None:
-        #print(str(self.image_dir / self.filter_file))
-        if not os.path.exists(self.image_dir / self.filter_file):
-            self.image_files = sorted(
-                [
-                    i.absolute()
-                    for i in self.image_dir.glob('*')
-                    if not i.name.startswith('.')]
-            )  # ignore hidden files
-        else:
-            with open(self.image_dir / self.filter_file, "r") as f:
-                image_to_keep = json.loads(f.read());
-            self.image_files = sorted(
-                [
-                    self.image_dir / i
-                    for i in image_to_keep]
-            )  # ignore hidden files
+        for image_dir in self.image_dirs:
+            self.image_files = list()
+            if not os.path.exists(image_dir / self.filter_file):
+                self.image_files.append(
+                        i.absolute()
+                        for i in image_dir.glob('*')
+                        if not i.name.startswith('.')
+                )  # ignore hidden files
+            else:
+                with open(image_dir / self.filter_file, "r") as f:
+                    image_to_keep = json.loads(f.read());
+                self.image_files.append(
+                        image_dir / i
+                        for i in image_to_keep
+                )  # ignore hidden files
 
 
     def __len__(self) -> int:

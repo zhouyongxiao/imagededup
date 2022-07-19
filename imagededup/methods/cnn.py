@@ -83,18 +83,18 @@ class CNN:
         image_pp = np.array(image_pp)[np.newaxis, :]
         return self.model.predict(image_pp)
 
-    def _get_cnn_features_batch(self, image_dir: PurePath) -> Dict[str, np.ndarray]:
+    def _get_cnn_features_batch(self, image_dirs: List[PurePath]) -> Dict[str, np.ndarray]:
         """
         Generate CNN encodings for all images in a given directory of images.
         Args:
-            image_dir: Path to the image directory.
+            image_dirs: Path to the image directory.
 
         Returns:
             A dictionary that contains a mapping of filenames and corresponding numpy array of CNN encodings.
         """
         self.logger.info('Start: Image encoding generation')
         self.data_generator = self.DataGenerator(
-            image_dir=image_dir,
+            image_dirs=image_dirs,
             batch_size=self.batch_size,
             target_size=self.target_size,
             basenet_preprocess=self.preprocess_input,
@@ -164,7 +164,7 @@ class CNN:
             else None
         )
 
-    def encode_images(self, image_dir: Union[PurePath, str]) -> Dict:
+    def encode_images(self, image_dir: Union[List[PurePath], List[str]]) -> Dict:
         """Generate CNN encodings for all images in a given directory of images.
 
         Args:
@@ -178,13 +178,15 @@ class CNN:
             encoding_map = myencoder.encode_images(image_dir='path/to/image/directory')
             ```
         """
-        if isinstance(image_dir, str):
-            image_dir = Path(image_dir)
-
-        if not image_dir.is_dir():
-            raise ValueError('Please provide a valid directory path!')
-
-        return self._get_cnn_features_batch(image_dir)
+        if isinstance(image_dir, List):
+            image_dirs = list()
+            for path in image_dir:
+                image_dirs.append(Path(path))
+                if not Path(path).is_dir():
+                    raise ValueError('Please provide a valid directory path!')
+        else:
+            raise ValueError('Please provide a valid list of directory path!')
+        return self._get_cnn_features_batch(image_dirs)
 
     @staticmethod
     def _check_threshold_bounds(thresh: float) -> None:

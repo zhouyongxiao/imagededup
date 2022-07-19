@@ -17,7 +17,7 @@ TEST_TARGET_SIZE = (224, 224)
 def run_before_tests():
     global generator
     generator = DataGenerator(
-        image_dir=IMAGE_DIR,
+        image_dirs=IMAGE_DIR,
         batch_size=TEST_BATCH_SIZE,
         basenet_preprocess=preprocess_input,
         target_size=TEST_TARGET_SIZE,
@@ -82,7 +82,7 @@ def test_valid_image_files_2():
     ]
 
     generator = DataGenerator(
-        image_dir=FORMATS_IMAGE_DIR,
+        image_dirs=[FORMATS_IMAGE_DIR],
         batch_size=TEST_BATCH_SIZE,
         basenet_preprocess=preprocess_input,
         target_size=TEST_TARGET_SIZE,
