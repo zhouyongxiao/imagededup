@@ -47,12 +47,14 @@ class DataGenerator(Sequence):
                         if not i.name.startswith('.')
                 )  # ignore hidden files
             else:
-                with open(str(image_dir / self.filter_file), "r") as file:
-                    image_to_keep = json.loads(file.read());
+                file = open(str(image_dir / self.filter_file), "r")
+                image_to_keep = json.loads(file)
+                file.close()
                 self.image_files.append(
                         image_dir / i
                         for i in image_to_keep
                 ) # ignore hidden files
+        print(len(image_to_keep))
         print(len(self.image_files))
 
     def __len__(self) -> int:
