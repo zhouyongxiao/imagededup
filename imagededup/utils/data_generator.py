@@ -38,7 +38,7 @@ class DataGenerator(Sequence):
         self.valid_image_files = self.image_files
 
     def _get_image_files(self) -> None:
-        print(os.path.exists(self.image_dir / self.filter_file))
+        print(str(self.image_dir / self.filter_file))
         if not os.path.exists(self.image_dir / self.filter_file):
             self.image_files = sorted(
                 [
