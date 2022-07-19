@@ -1,6 +1,7 @@
 from pathlib import PurePath
 from typing import Tuple, List, Callable
 import os
+from pathlib import Path
 import json
 import numpy as np
 from tensorflow.keras.utils import Sequence
@@ -50,12 +51,8 @@ class DataGenerator(Sequence):
                 file = open(str(image_dir / self.filter_file), "r")
                 image_to_keep = json.loads(file.read())
                 file.close()
-                print(len(image_to_keep))
-                self.image_files.append(
-                        image_dir / i
-                        for i in image_to_keep
-                ) # ignore hidden files
-
+                for i in image_to_keep:
+                    self.image_files.append(Path(str(image_dir) + "/" + i)) # ignore hidden files
         print(len(self.image_files))
 
     def __len__(self) -> int:
