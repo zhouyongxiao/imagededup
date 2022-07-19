@@ -113,9 +113,9 @@ class CNN:
             if folder in self.encoding_map:
                 cur_list = self.encoding_map[folder]
             else:
-                cur_list = list()
+                cur_list = dict()
                 self.encoding_map[folder] = cur_list
-            cur_list.append(tuple([str(j.name), feat_vec[i, :]]))
+            cur_list[str(j.name)] = feat_vec[i, :]
         # self.encoding_map = {j: feat_vec[i, :] for i, j in enumerate(filenames)}
         return self.encoding_map
 
