@@ -50,7 +50,7 @@ class DataGenerator(Sequence):
                 image_to_keep = json.loads(f.read());
             self.image_files = sorted(
                 [
-                    self.image_dir + "/" + i
+                    self.image_dir / i
                     for i in image_to_keep]
             )  # ignore hidden files
 
