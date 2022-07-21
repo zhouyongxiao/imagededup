@@ -119,7 +119,7 @@ class CNN:
         if len(self.encoding_map) == 1:
             self.encoding_map = dict()
             for i, j in enumerate(filenames):
-                folder = str(j)
+                folder = str(j.name)
                 self.encoding_map[folder] = feat_vec[i, :]
         # self.encoding_map = {j: feat_vec[i, :] for i, j in enumerate(filenames)}
         return self.encoding_map
