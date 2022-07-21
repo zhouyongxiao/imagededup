@@ -42,7 +42,7 @@ class DataGenerator(Sequence):
         self.image_files = list()
         for image_dir in self.image_dirs:
             if not os.path.exists(image_dir / self.filter_file):
-                print(image_dir.glob('*'))
+                print(str(self.image_dirs))
                 self.image_files.append(
                         Path(i.absolute())
                         for i in image_dir.glob('*')
