@@ -29,7 +29,6 @@ def get_cosine_similarity(
         return cosine_similarity(X, Y)
     else:
         if n_rows <= threshold:
-            print(X)
             return cosine_similarity(X)
 
         else:
