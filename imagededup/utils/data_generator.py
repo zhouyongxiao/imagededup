@@ -51,7 +51,10 @@ class DataGenerator(Sequence):
                 image_to_keep = json.loads(file.read())
                 file.close()
                 for i in image_to_keep:
-                    self.image_files.append(Path(str(image_dir) + "/" + i)) # ignore hidden files
+                    if not Path(i).is_dir():
+                        self.image_files.append(Path(str(image_dir) + "/" + i)) # ignore hidden files
+                    else:
+                        self.image_files.append(Path(i))
         # print(self.image_files)
         print(str(len(self.image_files)) + " images to encode")
 
