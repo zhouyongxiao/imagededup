@@ -271,7 +271,6 @@ class CNN:
                 if len(duplicates) > 0:
                     self.results[image_ids_2[i]] = duplicates
         else:
-            if encoding_map_1.values()
             image_ids = np.array([*encoding_map_1.keys()])
 
             # put image encodings into feature matrix
