@@ -53,6 +53,7 @@ class DataGenerator(Sequence):
                 file.close()
                 for i in image_to_keep:
                     self.image_files.append(Path(str(image_dir) + "/" + i)) # ignore hidden files
+        print(self.image_files)
         print(str(len(self.image_files)) + " images to encode")
 
     def __len__(self) -> int:
