@@ -116,6 +116,11 @@ class CNN:
                 cur_list = dict()
                 self.encoding_map[folder] = cur_list
             cur_list[str(j.name)] = feat_vec[i, :]
+        if len(self.encode_map) == 1:
+            self.encoding_map = dict()
+            for i, j in enumerate(filenames):
+                folder = str(j)
+                self.encoding_map[folder] = feat_vec[i, :]
         # self.encoding_map = {j: feat_vec[i, :] for i, j in enumerate(filenames)}
         return self.encoding_map
 
@@ -266,6 +271,7 @@ class CNN:
                 if len(duplicates) > 0:
                     self.results[image_ids_2[i]] = duplicates
         else:
+            if encoding_map_1.values()
             image_ids = np.array([*encoding_map_1.keys()])
 
             # put image encodings into feature matrix
