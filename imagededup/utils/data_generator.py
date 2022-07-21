@@ -42,6 +42,7 @@ class DataGenerator(Sequence):
         self.image_files = list()
         for image_dir in self.image_dirs:
             if not os.path.exists(image_dir / self.filter_file):
+                print(image_dir.glob('*'))
                 self.image_files.append(
                         Path(i.absolute())
                         for i in image_dir.glob('*')
@@ -53,7 +54,7 @@ class DataGenerator(Sequence):
                 file.close()
                 for i in image_to_keep:
                     self.image_files.append(Path(str(image_dir) + "/" + i)) # ignore hidden files
-        print(self.image_files)
+        # print(self.image_files)
         print(str(len(self.image_files)) + " images to encode")
 
     def __len__(self) -> int:
