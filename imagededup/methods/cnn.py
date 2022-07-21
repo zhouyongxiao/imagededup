@@ -116,7 +116,7 @@ class CNN:
                 cur_list = dict()
                 self.encoding_map[folder] = cur_list
             cur_list[str(j.name)] = feat_vec[i, :]
-        if len(self.encode_map) == 1:
+        if len(self.encoding_map) == 1:
             self.encoding_map = dict()
             for i, j in enumerate(filenames):
                 folder = str(j)
