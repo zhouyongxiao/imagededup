@@ -42,12 +42,10 @@ class DataGenerator(Sequence):
         self.image_files = list()
         for image_dir in self.image_dirs:
             if not os.path.exists(image_dir / self.filter_file):
-                print(str(self.image_dirs))
-                self.image_files.append(
-                        Path(i.absolute())
-                        for i in image_dir.glob('*')
-                        if not i.name.startswith('.')
-                )  # ignore hidden files
+                # print(str(self.image_dir))
+                for i in image_dir.glob('*'):
+                    if not i.name.startswith('.'):
+                        self.image_files.append(Path(i)) # ignore hidden files
             else:
                 file = open(str(image_dir / self.filter_file), "r")
                 image_to_keep = json.loads(file.read())
