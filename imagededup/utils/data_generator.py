@@ -43,7 +43,7 @@ class DataGenerator(Sequence):
         for image_dir in self.image_dirs:
             if not os.path.exists(image_dir / self.filter_file):
                 self.image_files.append(
-                        i.absolute()
+                        Path(i.absolute())
                         for i in image_dir.glob('*')
                         if not i.name.startswith('.')
                 )  # ignore hidden files
