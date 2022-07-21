@@ -270,7 +270,7 @@ class CNN:
 
             # put image encodings into feature matrix
             features = np.array([*encoding_map_1.values()])
-            print(features)
+            print(image_ids)
             self.logger.info('Start: Calculating cosine similarities...')
 
             self.cosine_scores = get_cosine_similarity(X=features, Y=None, verbose=self.verbose)
