@@ -278,7 +278,10 @@ class CNN:
             # print(image_ids)
             self.logger.info('Start: Calculating cosine similarities...')
 
-            self.cosine_scores = get_cosine_similarity(X=features, Y=None, verbose=self.verbose)
+            try: self.cosine_scores = get_cosine_similarity(X=features, Y=None, verbose=self.verbose)
+            except ValueError:
+                print(features)
+                raise ValueError
 
             np.fill_diagonal(
                 self.cosine_scores, 2.0
