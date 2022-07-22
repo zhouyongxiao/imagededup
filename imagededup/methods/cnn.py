@@ -280,7 +280,7 @@ class CNN:
 
             try: self.cosine_scores = get_cosine_similarity(X=features, Y=None, verbose=self.verbose)
             except ValueError:
-                print(features)
+                self.logger.info(str(features))
                 raise ValueError
 
             np.fill_diagonal(
