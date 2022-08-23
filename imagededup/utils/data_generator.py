@@ -41,7 +41,9 @@ class DataGenerator(Sequence):
     def _get_image_files(self) -> None:
         self.image_files = list()
         for image_dir in self.image_dirs:
-            if not os.path.exists(image_dir / self.filter_file):
+            if not Path(image_dir).is_dir():
+                self.image_files.append(Path(image_dir))
+            elif not os.path.exists(image_dir / self.filter_file):
                 # print(str(self.image_dir))
                 for i in image_dir.glob('*'):
                     if not i.name.startswith('.'):

@@ -195,9 +195,9 @@ class CNN:
             image_dirs = list()
             for path in image_dir:
                 image_dirs.append(Path(path))
-                if not Path(path).is_dir():
-                    print(Path(path))
-                    raise ValueError('Please provide a valid directory path!')
+                #if not Path(path).is_dir():
+                #    print(Path(path))
+                #    raise ValueError('Please provide a valid directory path!')
         else:
             raise ValueError('Please provide a valid list of directory path!')
         return self._get_cnn_features_batch(image_dirs)
