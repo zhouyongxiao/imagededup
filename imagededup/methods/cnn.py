@@ -421,7 +421,7 @@ class CNN:
 
         if image_dir:
             return self._find_duplicates_dir(
-                image_dir=image_dir,
+                image_dir=[image_dir],
                 min_similarity_threshold=min_similarity_threshold,
                 scores=scores,
                 outfile=outfile,
